@@ -99,7 +99,7 @@ async function generatePDF(transactions, res, sendEmail = false) {
     let totalWithdrawn = 0;
     for (let i = 0; i < transactions.length; i++) {
       const tx = transactions[i];
-      doc.fillColor("black"); // ALL rows in black
+      doc.fillColor("black");
       y = drawTableRow(doc, y, tx, i);
   
       if (tx.type.toLowerCase() === "deposit") totalDeposited += Number(tx.amount);
@@ -156,7 +156,7 @@ router.get("/daily", authMiddleware, async (req, res) => {
   }
 });
 
-// Route to generate, send to HR, and download
+// Route to generate, send to HR
 router.get("/daily/send", authMiddleware, async (req, res) => {
   try {
     const today = new Date();

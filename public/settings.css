@@ -1,0 +1,56 @@
+/* ============================
+   SETTINGS PAGE STYLES
+   ============================ */
+
+   .settings-page {
+    padding: 20px;
+}
+
+.settings-sections {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.settings-card {
+    background-color: #18283a;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #2a3441;
+}
+
+.settings-card h3 {
+    margin: 0 0 10px 0;
+    color: #fff;
+}
+
+.settings-card p {
+    color: #a8b3cf;
+    margin: 0 0 15px 0;
+}
+
+.settings-list {
+    list-style: none;
+    padding: 0;
+    background-color: #18283a;
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 15px;
+}
+
+.settings-list li {
+    padding: 12px 0;
+    color: #a8b3cf;
+    border-bottom: 1px solid #2a3441;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.settings-list li:last-child {
+    border-bottom: none;
+}
+
+.settings-list li:hover {
+    color: #fff;
+}

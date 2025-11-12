@@ -1,0 +1,68 @@
+<section class="payments-page">
+    <h2>💸 Payments & Transactions</h2>
+    
+    <div class="payment-actions">
+        <div class="action-card">
+            <h3>💰 Deposit</h3>
+            <form id="deposit-form" class="payment-form">
+                <div class="form-group">
+                    <label for="deposit-account">Account ID</label>
+                    <input type="number" id="deposit-account" required placeholder="Enter account ID" />
+                </div>
+                <div class="form-group">
+                    <label for="deposit-amount">Amount (BYN)</label>
+                    <input type="number" id="deposit-amount" step="0.01" min="0.01" required placeholder="0.00" />
+                </div>
+                <div id="deposit-error" class="error-message" style="display: none;"></div>
+                <button type="submit" class="btn-primary" id="deposit-btn">
+                    <span class="btn-text">Deposit</span>
+                    <span class="btn-loader" style="display: none;">Processing...</span>
+                </button>
+            </form>
+        </div>
+
+        <div class="action-card">
+            <h3>💸 Withdraw</h3>
+            <form id="withdraw-form" class="payment-form">
+                <div class="form-group">
+                    <label for="withdraw-account">Account ID</label>
+                    <input type="number" id="withdraw-account" required placeholder="Enter account ID" />
+                </div>
+                <div class="form-group">
+                    <label for="withdraw-amount">Amount (BYN)</label>
+                    <input type="number" id="withdraw-amount" step="0.01" min="0.01" required placeholder="0.00" />
+                </div>
+                <div id="withdraw-error" class="error-message" style="display: none;"></div>
+                <button type="submit" class="btn-primary" id="withdraw-btn">
+                    <span class="btn-text">Withdraw</span>
+                    <span class="btn-loader" style="display: none;">Processing...</span>
+                </button>
+            </form>
+        </div>
+
+        <div class="action-card">
+            <h3>🔄 Transfer</h3>
+            <form id="transfer-form" class="payment-form">
+                <div class="form-group">
+                    <label for="from-account">From Account ID</label>
+                    <input type="number" id="from-account" required placeholder="Enter account ID" />
+                </div>
+                <div class="form-group">
+                    <label for="to-account">To Account ID</label>
+                    <input type="number" id="to-account" required placeholder="Enter account ID" />
+                </div>
+                <div class="form-group">
+                    <label for="transfer-amount">Amount (BYN)</label>
+                    <input type="number" id="transfer-amount" step="0.01" min="0.01" required placeholder="0.00" />
+                </div>
+                <div id="transfer-error" class="error-message" style="display: none;"></div>
+                <button type="submit" class="btn-primary" id="transfer-btn">
+                    <span class="btn-text">Transfer</span>
+                    <span class="btn-loader" style="display: none;">Processing...</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="success-message" id="payment-success" style="display: none;"></div>
+</section>

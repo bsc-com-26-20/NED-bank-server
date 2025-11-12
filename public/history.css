@@ -1,0 +1,69 @@
+/* ============================
+   HISTORY PAGE STYLES
+   ============================ */
+
+   .history-page {
+    padding: 20px;
+}
+
+.history-controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    align-items: flex-end;
+}
+
+.history-controls .form-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.transactions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.transaction-item {
+    background-color: #18283a;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #2a3441;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tx-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tx-type {
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.tx-date {
+    color: #a8b3cf;
+    font-size: 0.85em;
+}
+
+.tx-details {
+    display: flex;
+    gap: 15px;
+    color: #a8b3cf;
+    font-size: 0.9em;
+}
+
+.tx-amount {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.no-transactions {
+    text-align: center;
+    color: #a8b3cf;
+    padding: 40px;
+}

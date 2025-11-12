@@ -1,12 +1,17 @@
+// index.js
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 require("dotenv").config();
+const path = require("path");
 const pool = require("./db");
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+
+// ✅ Serve static frontend files
+app.use(express.static(path.join(__dirname, "public")));
 
 // Import routes
 const authRoutes = require("./routes/auth");
@@ -17,7 +22,19 @@ app.use("/auth", authRoutes);
 
 // Root route
 app.get("/", (req, res) => {
-  res.send("MiniBank API is running ✅");
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// ✅ Database test route
+app.get("/test-db", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT NOW()");
+    console.log("✅ Database connection successful:", result.rows[0]);
+    res.json({ success: true, time: result.rows[0].now });
+  } catch (error) {
+    console.error("❌ Database test failed:", error);
+    res.status(500).json({ success: false, error: "Database connection failed" });
+  }
 });
 
 // Protected Customers route
@@ -31,19 +48,16 @@ app.get("/customers", authMiddleware, async (req, res) => {
   }
 });
 
-//account route
+// Other routes
 const accountsRoutes = require("./routes/accounts");
 app.use("/accounts", accountsRoutes);
 
-//customer route
 const customersRoutes = require("./routes/customers");
 app.use("/customers", customersRoutes);
 
-// stats route
 const statsRoutes = require("./routes/stats");
 app.use("/stats", statsRoutes);
 
-// reports route
 const reportsRoutes = require("./routes/reports");
 app.use("/reports", reportsRoutes);
 

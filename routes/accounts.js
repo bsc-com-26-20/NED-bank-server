@@ -8,7 +8,7 @@ router.post("/", authMiddleware, async (req, res) => {
   const { customer_id, account_type, initial_balance } = req.body;
 
   try {
-    // Generate a random account number (simple version)
+    // Generate a random account number
     const accountNumber = "ACC" + Math.floor(100000 + Math.random() * 900000);
 
     const result = await pool.query(
