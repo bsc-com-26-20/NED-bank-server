@@ -2,12 +2,16 @@
 // API SERVICE – Connecting Frontend to Backend
 // ============================================
 
-const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+// Detect if we are running locally
+const isLocal =
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1";
 
-// 🔹 Automatically switch between local and deployed API
+// ✅ Automatically use the correct backend URL
+// When deployed, it will use the same Render domain your frontend is served from
 const API_BASE_URL = isLocal
-  ? "http://localhost:5000" // local backend
-  : "https://ned-bank-server.onrender.com"; // hosted API
+  ? "http://localhost:5000"
+  : "https://ned-bank-server.onrender.com"; // Your deployed backend URL
 
 // ============================================
 // HELPER FUNCTION: Get Auth Token
@@ -39,17 +43,20 @@ async function apiRequest(endpoint, options = {}) {
   };
 
   try {
-    const url = `${API_BASE_URL}${endpoint}`;
+    // Ensure endpoint always starts with '/'
+    const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+    const url = `${API_BASE_URL}${cleanEndpoint}`;
     console.log(`📡 [API Request]: ${url}`);
 
     const response = await fetch(url, finalOptions);
 
-    // Handle non-JSON responses
+    // Handle non-JSON responses (like PDF downloads)
     const contentType = response.headers.get("content-type");
     if (contentType && contentType.includes("application/pdf")) {
       return response.blob();
     }
 
+    // Parse JSON safely
     const data = await response.json().catch(() => ({}));
 
     if (!response.ok) {
@@ -81,7 +88,6 @@ export async function testBackendConnection() {
 // ============================================
 // AUTHENTICATION API
 // ============================================
-
 export async function login(username, password) {
   return apiRequest("/auth/login", {
     method: "POST",
@@ -126,7 +132,6 @@ export async function refreshToken() {
 // ============================================
 // DASHBOARD, TRANSACTIONS, CUSTOMERS, REPORTS
 // ============================================
-
 export async function getDashboardStats() {
   return apiRequest("/stats");
 }
