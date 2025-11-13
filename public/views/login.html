@@ -27,7 +27,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: url("city_scape.jpg") center/cover no-repeat; /* 👈 Replace with your image */
+      background: url("../images/city_scape.jpg") center/cover no-repeat; /* 👈 Replace with your image */
       filter: blur(8px) brightness(0.5);
       z-index: 0;
       transform: scale(1.05); /* To avoid edge blur cutoff */
@@ -197,7 +197,7 @@
   </div>
 
   <script type="module">
-    import { handleLogin, handleRegister } from './auth.js';
+    import { handleLogin, handleRegister } from '../js/auth.js';
 
     const form = document.getElementById('login-form');
     const errorDiv = document.getElementById('login-error');

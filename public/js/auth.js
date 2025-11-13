@@ -54,21 +54,31 @@ export async function handleRegister(username, password, full_name, role = 'staf
 }
 
 // ============================================
-// LOGOUT FUNCTION
+// LOGOUT FUNCTION (Updated)
 // ============================================
 export async function handleLogout() {
   try {
-    await apiLogout();
+    // 🧭 Confirm before logging out
+    const confirmLogout = confirm("Are you sure you want to log out?");
+    if (!confirmLogout) return;
+
+    // Optional: call API logout if you have a backend endpoint
+    await apiLogout().catch(() => {});
+
   } catch (error) {
-    console.error('Logout error:', error);
+    console.error("Logout error:", error);
   } finally {
-    // Clear tokens regardless of API call success
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    // Redirect to login
-    window.location.reload();
+    // 🧹 Clear all stored data
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("token");
+    sessionStorage.clear();
+
+    // ✅ Redirect user to the login page
+    window.location.href = "/login";
   }
 }
+
 
 // ============================================
 // GET CURRENT USER

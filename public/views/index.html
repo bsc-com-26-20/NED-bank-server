@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NED Bank Clone</title>
+
+    <!-- ✅ Correct path to CSS (go up one level from /views to /css) -->
+    <link rel="stylesheet" href="../css/styles.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <aside class="sidebar">
+        <div class="sidebar-content">
+          <h2>NED Bank</h2>
+          <ul>
+            <li><a href="#" class="nav-item-active" data-name="home">🏠 Home</a></li>
+            <li><a href="#" class="nav-item" data-name="payments">💸 Payments</a></li>
+            <li><a href="#" class="nav-item" data-name="history">📜 History</a></li>
+            <li><a href="#" class="nav-item" data-name="helper">❓ Helper</a></li>
+          </ul>
+        </div>
+        <nav class="sidebar-footer">
+          <a href="#" class="nav-item" data-name="settings">⚙️ Settings</a>
+          <a href="#" class="nav-item" id="logout-link" style="margin-top: 10px;">🚪 Logout</a>
+        </nav>
+      </aside>
+
+      <!-- Dynamic area -->
+      <main id="main-content" class="main-content"></main>
+
+      <!-- Right Panel -->
+      <aside id="right-panel" class="right-panel"></aside>
+    </div>
+
+    <!-- ✅ Correct path to JS (go up one level from /views to /js) -->
+    <script type="module" src="../js/script.js"></script>
+  </body>
+</html>

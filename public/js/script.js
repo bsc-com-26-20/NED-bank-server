@@ -1,19 +1,4 @@
-// ============================================
-// JAVASCRIPT CONCEPTS EXPLAINED
-// ============================================
-// This file demonstrates several important JavaScript concepts:
-// 1. DOM Manipulation (selecting and modifying HTML elements)
-// 2. Event Listeners (responding to user clicks)
-// 3. Fetch API (loading external files)
-// 4. Promises and Async/Await (handling asynchronous operations)
-// 5. CSS Class Manipulation (adding/removing classes for styling)
-// ============================================
-
-// ============================================
 // FUNCTION: drawChart
-// ============================================
-// Concept: Canvas API for drawing graphics
-// This function draws a line chart on an HTML canvas element
 function drawChart(canvasId, data) {
   // DOM Selection: getElementById() finds an element by its ID
   const canvas = document.getElementById(canvasId);
@@ -79,102 +64,81 @@ function drawChart(canvasId, data) {
     ctx.fill();
   });
 }
-
-// ============================================
 // FUNCTION: moveRightPanelContent
-// ============================================
-// Concept: DOM Manipulation - Moving elements between containers
-// This function extracts right panel content from home page and moves it to fixed right panel
 function moveRightPanelContent() {
   const rightPanel = document.getElementById('right-panel');
   const rightPanelContent = document.getElementById('home-right-panel-content');
   
   if (!rightPanel || !rightPanelContent) return;
-  
-  // Move the content from home page to fixed right panel
-  // cloneNode(true) creates a deep copy of the element
   const contentClone = rightPanelContent.cloneNode(true);
   contentClone.style.display = 'block'; // Show it in the right panel
   contentClone.removeAttribute('id'); // Remove the ID so we don't have duplicates
-  
   rightPanel.innerHTML = ''; // Clear previous content
   rightPanel.appendChild(contentClone); // Add the content
-  
-  // Remove the hidden content from main content area
   rightPanelContent.remove();
 }
 
-// ============================================
-// FUNCTION: loadPage
-// ============================================
-// Concept: Fetch API + Promises + DOM Manipulation
-// This function loads HTML content from a file and displays it
+// FUNCTION: dynamically load CSS for a page
+function loadPageStyles(page) {
+  // Remove previous page-specific CSS
+  const oldLink = document.getElementById("page-style");
+  if (oldLink) oldLink.remove();
+
+  // Create new <link> element
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = `../css/${page}.css`; // path to your page-specific CSS
+  link.id = "page-style";
+
+  document.head.appendChild(link);
+}
+
+
 function loadPage(page) {
-  // Fetch API: makes an HTTP request to get a file
-  // Returns a Promise (an object representing a future value)
-  fetch(`${page}.html`)  // Template literal: `${variable}` inserts the variable
-    .then(res => {  // .then() handles the response when it arrives
-      // Check if the request was successful
+  fetch(`views/${page}.html`)
+    .then(res => {
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
-      return res.text();  // Convert response to text (HTML string)
+      return res.text();
     })
-    .then(html => {  // This .then() receives the HTML text
-      // DOM Manipulation: innerHTML replaces the content of an element
-      document.getElementById('main-content').innerHTML = html;
+    .then(html => {
+      const mainContent = document.getElementById('main-content');
+      mainContent.innerHTML = html;
 
-      // ============================================
-      // ACTIVE PAGE HIGHLIGHTING - KEY CONCEPT!
-      // ============================================
-      // Step 1: Remove 'nav-item-active' class from ALL navigation items
-      // querySelectorAll() returns a NodeList (like an array) of all matching elements
+      // ✅ Load page-specific CSS dynamically
+      loadPageStyles(page);
+
+      // Update active sidebar link
       document.querySelectorAll('.nav-item').forEach(a => {
-        // classList.remove() removes a CSS class from an element
         a.classList.remove('nav-item-active');
       });
-      
-      // Step 2: Find the link that matches the current page
-      // Template literal with attribute selector: [data-name="home"]
       const activeLink = document.querySelector(`[data-name="${page}"]`);
-      
-      // Step 3: Add 'nav-item-active' class to highlight the active page
       if (activeLink) {
-        // classList.add() adds a CSS class to an element
         activeLink.classList.add('nav-item-active');
       }
-      // ============================================
 
-      // Handle right panel content for home page
+      // Home page specific actions
       if (page === 'home') {
-        // Move right panel content from home page to fixed right panel
-        // setTimeout ensures DOM is ready before we try to move elements
         setTimeout(async () => {
           moveRightPanelContent();
-          
-          // Load real data from backend
           await loadDashboardData();
-          
-          // Draw chart after content is loaded
           const costs = [12, 30, 22, 25, 18, 20, 12];
           drawChart('costChart', costs);
-        }, 100);  // Wait 100ms for DOM to be ready
+        }, 100);
       } else {
-        // Clear right panel for other pages
         const rightPanel = document.getElementById('right-panel');
-        if (rightPanel) {
-          rightPanel.innerHTML = '';
-        }
+        if (rightPanel) rightPanel.innerHTML = '';
       }
 
-      // Reinitialize page-specific handlers after content loads
+      // Initialize page-specific scripts
       setTimeout(() => {
         if (page === 'login') initLoginPage();
         if (page === 'payments') initPaymentsPage();
         if (page === 'history') initHistoryPage();
       }, 150);
     })
-    .catch(err => {  // .catch() handles any errors that occur
+    .catch(err => {
       console.error('Error loading page:', err);
       document.getElementById('main-content').innerHTML = `
         <div style="padding: 20px; text-align: center;">
@@ -189,78 +153,39 @@ function loadPage(page) {
     });
 }
 
-// ============================================
-// EVENT LISTENERS - KEY CONCEPT!
-// ============================================
-// Concept: Event-driven programming
-// We attach "listeners" to elements that wait for user interactions
 
-// Step 1: Select ALL navigation links
-// querySelectorAll('.nav-item') finds all elements with class "nav-item"
+
 document.querySelectorAll('.nav-item').forEach(link => {
-  // Step 2: Add an event listener to each link
-  // addEventListener('click', function) listens for click events
   link.addEventListener('click', async (e) => {
-    // e.preventDefault() stops the default link behavior (preventing page reload)
     e.preventDefault();
-    
-    // Step 3: Get which page to load
-    // getAttribute() reads the value of the data-name attribute
     const page = link.getAttribute('data-name');
-    
-    // Step 4: Check auth and load that page
     await checkAuthAndLoadPage(page);
   });
 });
-// ============================================
 
-// ============================================
 // FUNCTION: loadDashboardData
-// ============================================
-// Concept: Fetching real data from backend API
-// This function loads dashboard stats and transactions from the backend
 async function loadDashboardData() {
   try {
-    // Import API functions (using dynamic import for ES modules)
     const api = await import('./api.js');
-    
-    // Fetch dashboard stats
     const stats = await api.getDashboardStats();
-    
-    // Fetch recent transactions
     const transactions = await api.getRecentTransactions();
-    
-    // Update the UI with real data
     updateDashboardUI(stats, transactions);
   } catch (error) {
     console.error('Error loading dashboard data:', error);
-    // Show error message to user
     showErrorMessage('Failed to load dashboard data. Make sure the backend server is running.');
   }
 }
-
-// ============================================
 // FUNCTION: updateDashboardUI
-// ============================================
-// Updates the dashboard UI with real data from backend
 function updateDashboardUI(stats, transactions) {
-  // Update stats display
   updateDashboardStats(stats);
-  
-  // Update recent transactions in the right panel
   updateRecentTransactions(transactions);
 }
 
-// ============================================
 // FUNCTION: updateDashboardStats
-// ============================================
-// Updates the dashboard statistics display
 function updateDashboardStats(stats) {
-  // Create or update stats cards in the popular section
   const popularSection = document.querySelector('.popular');
   if (!popularSection) return;
   
-  // Update or create stats display
   let statsContainer = document.getElementById('dashboard-stats');
   if (!statsContainer) {
     statsContainer = document.createElement('div');
@@ -284,19 +209,13 @@ function updateDashboardStats(stats) {
     </div>
   `;
 }
-
-// ============================================
 // FUNCTION: updateRecentTransactions
-// ============================================
-// Updates the history section with real transactions
 function updateRecentTransactions(transactions) {
   const historyList = document.querySelector('.right-panel .history ul');
   if (!historyList) return;
   
-  // Clear existing items
   historyList.innerHTML = '';
   
-  // Add real transactions
   transactions.slice(0, 5).forEach(transaction => {
     const li = document.createElement('li');
     const amount = parseFloat(transaction.amount);
@@ -311,20 +230,10 @@ function updateRecentTransactions(transactions) {
   });
 }
 
-// ============================================
-// FUNCTION: showErrorMessage
-// ============================================
-// Shows error messages to the user
 function showErrorMessage(message) {
-  // You can create a toast notification or alert here
   console.error(message);
-  // For now, just log to console
 }
-
-// ============================================
 // FUNCTION: initLoginPage
-// ============================================
-// Sets up login form event handlers
 function initLoginPage() {
   const loginForm = document.getElementById('login-form');
   if (!loginForm) return;
@@ -369,12 +278,8 @@ function initLoginPage() {
   });
 }
 
-// ============================================
 // FUNCTION: checkAuthAndLoadPage
-// ============================================
-// Checks authentication before loading pages
 async function checkAuthAndLoadPage(page) {
-  // Pages that don't require authentication
   const publicPages = ['login'];
   
   if (publicPages.includes(page)) {
@@ -382,7 +287,6 @@ async function checkAuthAndLoadPage(page) {
     return;
   }
   
-  // Check authentication for protected pages
   try {
     const { isAuthenticated } = await import('./auth.js');
     if (!isAuthenticated()) {
@@ -396,24 +300,15 @@ async function checkAuthAndLoadPage(page) {
   loadPage(page);
 }
 
-// ============================================
-// PAGE LOAD EVENT
-// ============================================
-// Concept: DOMContentLoaded event
-// This fires when the HTML is fully loaded (but images might still be loading)
 window.addEventListener('DOMContentLoaded', async () => {
-  // Check authentication first
   try {
     const { isAuthenticated } = await import('./auth.js');
     if (isAuthenticated()) {
-      // User is logged in - load home page
       checkAuthAndLoadPage('home');
     } else {
-      // User not logged in - show login page
       checkAuthAndLoadPage('login');
     }
   } catch (error) {
-    // If auth check fails, show login page
     checkAuthAndLoadPage('login');
   }
   
@@ -426,10 +321,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   }, 100);
 });
 
-// ============================================
 // FUNCTION: initLogout
-// ============================================
-// Sets up logout functionality
 function initLogout() {
   const logoutLink = document.getElementById('logout-link');
   if (logoutLink) {
@@ -441,10 +333,7 @@ function initLogout() {
   }
 }
 
-// ============================================
 // FUNCTION: initPaymentsPage
-// ============================================
-// Sets up payment forms (deposit, withdraw, transfer)
 function initPaymentsPage() {
   // Deposit form
   const depositForm = document.getElementById('deposit-form');
@@ -473,10 +362,7 @@ function initPaymentsPage() {
     });
   }
 }
-
-// ============================================
 // FUNCTION: handleDeposit
-// ============================================
 async function handleDeposit() {
   const accountId = document.getElementById('deposit-account')?.value;
   const amount = parseFloat(document.getElementById('deposit-amount')?.value);
@@ -525,9 +411,7 @@ async function handleDeposit() {
   }
 }
 
-// ============================================
 // FUNCTION: handleWithdraw
-// ============================================
 async function handleWithdraw() {
   const accountId = document.getElementById('withdraw-account')?.value;
   const amount = parseFloat(document.getElementById('withdraw-amount')?.value);
@@ -576,9 +460,7 @@ async function handleWithdraw() {
   }
 }
 
-// ============================================
 // FUNCTION: handleTransfer
-// ============================================
 async function handleTransfer() {
   const fromAccountId = document.getElementById('from-account')?.value;
   const toAccountId = document.getElementById('to-account')?.value;
@@ -636,10 +518,7 @@ async function handleTransfer() {
   }
 }
 
-// ============================================
 // FUNCTION: initHistoryPage
-// ============================================
-// Sets up history page to load transactions
 function initHistoryPage() {
   const loadBtn = document.getElementById('load-history-btn');
   if (loadBtn) {
@@ -657,9 +536,7 @@ function initHistoryPage() {
   }
 }
 
-// ============================================
 // FUNCTION: loadTransactionHistory
-// ============================================
 async function loadTransactionHistory() {
   const accountFilter = document.getElementById('account-filter')?.value;
   const transactionsList = document.getElementById('transactions-list');
@@ -735,16 +612,3 @@ async function loadTransactionHistory() {
     if (btnLoader) btnLoader.style.display = 'none';
   }
 }
-
-// ============================================
-// SUMMARY OF JAVASCRIPT CONCEPTS USED:
-// ============================================
-// 1. DOM Selection: getElementById(), querySelector(), querySelectorAll()
-// 2. DOM Manipulation: innerHTML, classList.add(), classList.remove()
-// 3. Event Handling: addEventListener(), preventDefault()
-// 4. Fetch API: fetch(), .then(), .catch()
-// 5. Array Methods: forEach(), map()
-// 6. Template Literals: `${variable}` for string interpolation
-// 7. Arrow Functions: () => {} for concise function syntax
-// 8. Async Operations: Promises, setTimeout()
-// ============================================

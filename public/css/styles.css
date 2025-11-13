@@ -1,0 +1,253 @@
+/* ============================
+   GLOBAL / SHARED STYLES
+   ============================ */
+
+   body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #0b1622;
+    color: white;
+    overflow-x: hidden;
+}
+
+.container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    margin-left: 240px;
+    margin-right: 290px;
+    min-height: 100vh;
+}
+
+/* ========== SIDEBAR ========== */
+.sidebar {
+    position: fixed;
+    left: 20px;
+    top: 20px;
+    bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 200px;
+    padding: 20px;
+    border-radius: 15px;
+    background-color: #101a28;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+}
+
+.sidebar-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-content h2 {
+    margin: 0 0 20px 0;
+    color: #fff;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar ul li {
+    margin: 8px 0;
+}
+
+.sidebar a {
+    color: #a8b3cf;
+    text-decoration: none;
+    display: block;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.sidebar a:hover {
+    color: white;
+    background-color: #18283a;
+}
+
+.sidebar a.nav-item-active {
+    color: white;
+    background-color: #6b7df6;
+    font-weight: 500;
+}
+
+/* ========== MAIN CONTENT ========== */
+.main-content {
+    flex: 1;
+    background-color: #101a28;
+    padding: 20px;
+    border-radius: 15px;
+    min-height: calc(100vh - 40px);
+}
+
+/* ========== RIGHT PANEL ========== */
+.right-panel {
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    bottom: 20px;
+    width: 250px;
+    background-color: #101a28;
+    padding: 20px;
+    border-radius: 15px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+/* Old right panel (legacy) */
+.rightpanel {
+    width: 250px;
+    background-color: #101a28;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+/* ========== BUTTONS ========== */
+.btn-primary {
+    background-color: #6b7df6;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-family: 'Poppins', sans-serif;
+}
+
+.btn-primary:hover {
+    background-color: #5a6de8;
+}
+
+.btn-ghost {
+    background-color: transparent;
+    color: #a8b3cf;
+    border: 1px solid #a8b3cf;
+    border-radius: 15px;
+    padding: 8px 16px;
+    margin-top: 10px;
+    width: 100%;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-ghost:hover {
+    background-color: #18283a;
+    color: #fff;
+}
+
+/* ========== LOGIN PAGE ========== */
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 40px);
+    padding: 20px;
+}
+
+.login-container {
+    background-color: #18283a;
+    padding: 40px;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid #2a3441;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-header h2 {
+    margin: 0 0 10px 0;
+    color: #fff;
+    font-size: 2em;
+}
+
+.login-header p {
+    color: #a8b3cf;
+}
+
+.login-form {
+    margin-top: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    color: #a8b3cf;
+    margin-bottom: 8px;
+    font-size: 0.9em;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #2a3441;
+    border-radius: 8px;
+    background-color: #101a28;
+    color: #fff;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #6b7df6;
+}
+
+.btn-login {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.login-footer {
+    text-align: center;
+    margin-top: 20px;
+    color: #a8b3cf;
+}
+
+.login-footer a {
+    color: #6b7df6;
+    text-decoration: none;
+}
+
+.login-footer a:hover {
+    text-decoration: underline;
+}
+
+/* ========== ALERT MESSAGES ========== */
+.error-message {
+    background-color: #ff6b6b;
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-size: 0.9em;
+}
+
+.success-message {
+    background-color: #4ade80;
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-size: 0.9em;
+}
+
+.loading-state {
+    text-align: center;
+    padding: 20px;
+    color: #a8b3cf;
+}
