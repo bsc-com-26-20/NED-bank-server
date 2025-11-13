@@ -78,3 +78,25 @@
     font-size: 2em;
     font-weight: bold;
 }
+
+/* ========== RIGHT PANEL ========== */
+.right-panel {
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    bottom: 20px;
+    width: 250px;
+    background-color: #101a28;
+    padding: 20px;
+    border-radius: 15px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+/* Old right panel (legacy) */
+.rightpanel {
+    width: 250px;
+    background-color: #101a28;
+    padding: 20px;
+    border-radius: 15px;
+}

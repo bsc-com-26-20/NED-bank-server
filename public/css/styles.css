@@ -90,28 +90,6 @@
     min-height: calc(100vh - 40px);
 }
 
-/* ========== RIGHT PANEL ========== */
-.right-panel {
-    position: fixed;
-    right: 20px;
-    top: 20px;
-    bottom: 20px;
-    width: 250px;
-    background-color: #101a28;
-    padding: 20px;
-    border-radius: 15px;
-    overflow-y: auto;
-    z-index: 1000;
-}
-
-/* Old right panel (legacy) */
-.rightpanel {
-    width: 250px;
-    background-color: #101a28;
-    padding: 20px;
-    border-radius: 15px;
-}
-
 /* ========== BUTTONS ========== */
 .btn-primary {
     background-color: #6b7df6;
