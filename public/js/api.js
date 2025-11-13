@@ -7,7 +7,7 @@ const isLocal = window.location.hostname === "localhost" || window.location.host
 // 🔹 Automatically switch between local and deployed API
 const API_BASE_URL = isLocal
   ? "http://localhost:5000" // local backend
-  : "https://ned-bank-server.onrender.com/"; // change to your hosted API later
+  : "https://ned-bank-server.onrender.com"; // hosted API
 
 // ============================================
 // HELPER FUNCTION: Get Auth Token
