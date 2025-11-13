@@ -8,7 +8,9 @@ const pool = require("./db");
 
 const app = express();
 
+// ================================
 // Middleware
+// ================================
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -58,8 +60,8 @@ app.get("/history", (req, res) => res.sendFile(path.join(viewPath, "history.html
 app.get("/payments", (req, res) => res.sendFile(path.join(viewPath, "payments.html")));
 app.get("/helper", (req, res) => res.sendFile(path.join(viewPath, "helper.html")));
 
-// ✅ Fallback route (important for Render refreshes)
-app.get("*", (req, res) => {
+// ✅ Fallback route (Express 5+ compatible)
+app.get("/*", (req, res) => {
   res.sendFile(path.join(viewPath, "login.html"));
 });
 
