@@ -46,6 +46,18 @@ app.get("/helper", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "views", "helper.html"));
 });
 
+app.get("/accounts.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "views", "accounts.html"));
+});
+
+app.get("/customers.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "views", "customers.html"));
+});
+
+app.get("/customer-details.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "views", "customer-details.html"));
+});
+
 // ✅ Database test route
 app.get("/test-db", async (req, res) => {
   try {
@@ -58,16 +70,16 @@ app.get("/test-db", async (req, res) => {
   }
 });
 
-// ✅ Protected Customers route
-app.get("/customers", authMiddleware, async (req, res) => {
-  try {
-    const result = await pool.query("SELECT * FROM customers");
-    res.json(result.rows);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server error");
-  }
-});
+// // ✅ Protected Customers route
+// app.get("/customers", authMiddleware, async (req, res) => {
+//   try {
+//     const result = await pool.query("SELECT * FROM customers");
+//     res.json(result.rows);
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).send("Server error");
+//   }
+// });
 
 // ✅ Other API routes
 const accountsRoutes = require("./routes/accounts");

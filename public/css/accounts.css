@@ -1,0 +1,65 @@
+.accounts-page {
+    padding: 20px;
+    margin-left: 240px; /* space for sidebar */
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.accounts-page h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+.search-box {
+    margin-bottom: 20px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    outline: none;
+}
+
+.accounts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.account-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-left: 5px solid #3498db;
+    transition: transform 0.2s;
+}
+
+.account-card:hover {
+    transform: translateY(-4px);
+}
+
+.account-card h3 {
+    margin: 0 0 10px;
+    color: #34495e;
+    font-size: 20px;
+}
+
+.account-card .acc-id {
+    font-size: 15px;
+    margin-bottom: 8px;
+    color: #555;
+}
+
+.account-card .balance {
+    font-size: 18px;
+    color: #2c3e50;
+    font-weight: bold;
+}
+
+.account-card .balance span {
+    color: #27ae60;
+}

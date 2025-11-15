@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customer Accounts - NedBank</title>
+
+    <link rel="stylesheet" href="../css/customer-details.css" />
+    <link rel="stylesheet" href="../css/sidebar.css" />
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div id="sidebar-container"></div>
+
+    <main class="customer-details-page">
+        <h2>👤 Customer Accounts</h2>
+
+        <div id="customer-info" class="customer-info">
+            <p>Loading customer info...</p>
+        </div>
+
+        <h3>💳 Accounts</h3>
+        <div id="accounts-container" class="accounts-container">
+            <p>Loading accounts...</p>
+        </div>
+
+    </main>
+
+    <script src="../js/sidebar.js"></script>
+
+    <script type="module">
+        import { getCustomerWithAccounts, depositMoney, withdrawMoney, transferMoney } from "../js/api.js";
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const customerId = urlParams.get("id");
+
+        const customerInfoDiv = document.getElementById("customer-info");
+        const accountsContainer = document.getElementById("accounts-container");
+
+        async function loadCustomerDetails() {
+            try {
+                const customer = await getCustomerWithAccounts(customerId);
+
+                // Show customer info
+                customerInfoDiv.innerHTML = `
+                    <h3>${customer.full_name}</h3>
+                    <p>ID: <strong>${customer.customer_id}</strong></p>
+                    <p>Email: ${customer.email || "—"}</p>
+                    <p>Phone: ${customer.phone || "—"}</p>
+                `;
+
+                // Show accounts
+                accountsContainer.innerHTML = "";
+
+                if (!customer.accounts || customer.accounts.length === 0) {
+                    accountsContainer.innerHTML = "<p>No accounts found for this customer.</p>";
+                    return;
+                }
+
+                customer.accounts.forEach(account => {
+                    const card = document.createElement("div");
+                    card.classList.add("account-card");
+
+                    card.innerHTML = `
+                        <h4>${account.account_type} (ID: ${account.id})</h4>
+                        <p>Account Number: <strong>${account.account_number}</strong></p>
+                        <p>Balance: <strong>${account.balance.toFixed(2)} MWK</strong></p>
+
+                        <div class="account-actions">
+                            <input type="number" class="deposit-amount" placeholder="Deposit amount">
+                            <button class="btn-deposit">Deposit</button>
+
+                            <input type="number" class="withdraw-amount" placeholder="Withdraw amount">
+                            <button class="btn-withdraw">Withdraw</button>
+                        </div>
+                    `;
+
+                    // Deposit button
+                    card.querySelector(".btn-deposit").addEventListener("click", async () => {
+                        const amount = parseFloat(card.querySelector(".deposit-amount").value);
+                        if (amount > 0) {
+                            try {
+                                await depositMoney(account.id, amount);
+                                loadCustomerDetails();
+                            } catch (err) {
+                                alert("Deposit failed: " + err.message);
+                            }
+                        } else {
+                            alert("Enter a valid deposit amount");
+                        }
+                    });
+
+                    // Withdraw button
+                    card.querySelector(".btn-withdraw").addEventListener("click", async () => {
+                        const amount = parseFloat(card.querySelector(".withdraw-amount").value);
+                        if (amount > 0) {
+                            try {
+                                await withdrawMoney(account.id, amount);
+                                loadCustomerDetails();
+                            } catch (err) {
+                                alert("Withdrawal failed: " + err.message);
+                            }
+                        } else {
+                            alert("Enter a valid withdraw amount");
+                        }
+                    });
+
+                    accountsContainer.appendChild(card);
+                });
+
+            } catch (err) {
+                customerInfoDiv.innerHTML = "<p style='color:red;'>Failed to load customer details.</p>";
+                accountsContainer.innerHTML = "";
+                console.error(err);
+            }
+        }
+
+        loadCustomerDetails();
+    </script>
+
+</body>
+</html>

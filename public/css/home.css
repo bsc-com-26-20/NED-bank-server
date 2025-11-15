@@ -32,26 +32,35 @@
     transition: 0.3s;
 }
 
+/* Popular Cards */
 .cards {
     display: flex;
-    gap: 15px;
-    margin-top: 10px;
+    gap: 20px; /* wider spacing */
+    margin-top: 15px;
 }
 
 .card {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('images/background-img.png');
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
+        url('../images/city_scape.jpg');
     background-size: cover;
     background-position: center;
-    flex: 1;
-    padding: 15px;
-    border-radius: 12px;
+    filter: blur(1px);
+    padding: 30px;
+    height: 120px;
+    border-radius: 14px;
     text-align: center;
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 600;
     transition: 0.3s;
 }
 
 .card:hover {
-    background-color: #18283a;
+    filter: blur(0);
+    transform: translateY(-3px);
 }
+
 
 .dashboard-stats {
     display: grid;
@@ -85,18 +94,29 @@
     right: 20px;
     top: 20px;
     bottom: 20px;
-    width: 250px;
+    width: 260px;
     background-color: #101a28;
-    padding: 20px;
+    padding: 25px; /* more spacing */
     border-radius: 15px;
     overflow-y: auto;
     z-index: 1000;
 }
 
-/* Old right panel (legacy) */
-.rightpanel {
-    width: 250px;
-    background-color: #101a28;
-    padding: 20px;
-    border-radius: 15px;
+.right-panel section {
+    margin-bottom: 25px; /* space between sections */
+}
+
+.right-panel h4 {
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+}
+
+.right-panel ul li {
+    padding: 10px 0;
+}
+
+.rates {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* spacing between each rate */
 }

@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NED Bank - Login</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
     /* ===== GENERAL STYLING ===== */
     body {
@@ -19,57 +21,37 @@
       position: relative;
     }
 
-    /* ✅ Add blurred background image */
+    /* Blurred background image */
     body::before {
       content: "";
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url("../images/city_scape.jpg") center/cover no-repeat; /* 👈 Replace with your image */
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: url("../images/city_scape.jpg") center/cover no-repeat;
       filter: blur(8px) brightness(0.5);
       z-index: 0;
-      transform: scale(1.05); /* To avoid edge blur cutoff */
+      transform: scale(1.05);
     }
 
     /* ===== LOGIN CARD ===== */
     .login-container {
       position: relative;
-      z-index: 1; /* Make sure it’s above the blur */
+      z-index: 1;
       background: rgba(17, 24, 39, 0.9);
       backdrop-filter: blur(12px);
       padding: 50px 40px;
       border-radius: 20px;
-      width: 440px; /* 👈 Bigger card */
-      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6);
+      width: 440px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.6);
       text-align: center;
       transition: all 0.3s ease-in-out;
     }
 
-    .login-header h2 {
-      margin: 0;
-      font-size: 2rem;
-      color: #38bdf8;
-    }
+    .login-header h2 { margin: 0; font-size: 2rem; color: #38bdf8; }
+    .login-header p { color: #94a3b8; font-size: 1rem; margin-top: 5px; }
 
-    .login-header p {
-      color: #94a3b8;
-      font-size: 1rem;
-      margin-top: 5px;
-    }
-
-    .form-group {
-      margin-top: 20px;
-      text-align: left;
-    }
-
-    label {
-      display: block;
-      font-size: 0.95rem;
-      color: #cbd5e1;
-      margin-bottom: 6px;
-    }
+    .form-group { margin-top: 20px; text-align: left; position: relative; }
+    label { display: block; font-size: 0.95rem; color: #cbd5e1; margin-bottom: 6px; }
 
     input {
       width: 100%;
@@ -83,8 +65,19 @@
       transition: background 0.2s;
     }
 
-    input:focus {
-      background: #2d3a58;
+    input:focus { background: #2d3a58; }
+
+    .password-wrapper {
+      position: relative;
+    }
+
+    .password-wrapper i {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #94a3b8;
     }
 
     .btn-primary {
@@ -114,57 +107,83 @@
       display: none;
     }
 
-    .login-footer {
-      margin-top: 25px;
-      font-size: 0.9rem;
-      color: #94a3b8;
-    }
+    .login-footer { margin-top: 25px; font-size: 0.9rem; color: #94a3b8; }
+    .login-footer a { color: #38bdf8; text-decoration: none; font-weight: 500; }
+    .login-footer a:hover { text-decoration: underline; }
 
-    .login-footer a {
-      color: #38bdf8;
-      text-decoration: none;
-      font-weight: 500;
-    }
+    .hidden { display: none; }
 
-    .login-footer a:hover {
-      text-decoration: underline;
-    }
-
-    .hidden {
-      display: none;
-    }
-
+    /* Loading spinner */
     .btn-primary.loading {
       position: relative;
-      color: transparent; /* hide text while loading */
+      color: transparent;
       pointer-events: none;
     }
-
     .btn-primary.loading::after {
       content: "";
       position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 20px;
-      height: 20px;
+      top: 50%; left: 50%;
+      width: 20px; height: 20px;
       border: 3px solid #fff;
       border-top-color: transparent;
       border-radius: 50%;
       transform: translate(-50%, -50%);
       animation: spin 0.8s linear infinite;
     }
+    @keyframes spin { from {transform: translate(-50%, -50%) rotate(0deg);} to {transform: translate(-50%, -50%) rotate(360deg);} }
 
-    @keyframes spin {
-      from { transform: translate(-50%, -50%) rotate(0deg); }
-      to { transform: translate(-50%, -50%) rotate(360deg); }
+    /* ===== MODAL STYLES ===== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 9999;
     }
+
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .modal {
+      background: #1e293b;
+      padding: 30px 25px;
+      border-radius: 15px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      color: #e2e8f0;
+      transform: scale(0.8);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.active .modal { transform: scale(1); }
+
+    .modal h3 { margin-top: 0; color: #38bdf8; }
+    .modal p { margin: 10px 0; }
+    .modal button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      border: none;
+      background: #38bdf8;
+      color: #fff;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .modal input[type="checkbox"] { margin-right: 6px; }
 
   </style>
 </head>
 <body>
+
+  <!-- LOGIN CARD -->
   <div class="login-container">
     <div class="login-header">
-      <h2>🏦 NED Bank</h2>
+      <h2><i class="fas fa-university"></i> NED Bank</h2>
       <p id="form-title">Welcome back! Please log in to continue</p>
     </div>
 
@@ -174,9 +193,10 @@
         <input type="text" id="username" name="username" required placeholder="Enter your username" />
       </div>
 
-      <div class="form-group">
+      <div class="form-group password-wrapper">
         <label for="password">Password</label>
         <input type="password" id="password" name="password" required placeholder="Enter your password" />
+        <i class="fas fa-eye" id="toggle-password"></i>
       </div>
 
       <div class="form-group hidden" id="full-name-group">
@@ -185,14 +205,23 @@
       </div>
 
       <div id="login-error" class="error-message"></div>
-
       <button type="submit" class="btn-primary" id="login-btn">Login</button>
     </form>
 
     <div class="login-footer">
-      <p id="toggle-text">
-        Don't have an account? <a href="#" id="register-link">Register here</a>
-      </p>
+      <p id="toggle-text">Don't have an account? <a href="#" id="register-link">Register here</a></p>
+    </div>
+  </div>
+
+  <!-- DEMO MODAL -->
+  <div class="modal-overlay" id="demo-modal">
+    <div class="modal">
+      <h3>Demo Account Info</h3>
+      <p>Login using the following credentials:</p>
+      <p><strong>Username:</strong> staff2<br><strong>Password:</strong> 12345</p>
+      <p>Or create your own account – it's simple!</p>
+      <p><input type="checkbox" id="dont-show-again" /> Don't show this again</p>
+      <button id="close-modal">Got it!</button>
     </div>
   </div>
 
@@ -230,9 +259,7 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       errorDiv.style.display = 'none';
-      loginBtn.classList.add('loading'); // start spinner
-
-      // Change text to show progress
+      loginBtn.classList.add('loading');
       const originalText = loginBtn.textContent;
       loginBtn.textContent = isRegister ? 'Creating account...' : 'Logging in...';
 
@@ -264,11 +291,42 @@
         errorDiv.textContent = err.message;
         errorDiv.style.display = 'block';
       } finally {
-        loginBtn.classList.remove('loading'); // stop spinner
-        loginBtn.textContent = originalText; // restore text
+        loginBtn.classList.remove('loading');
+        loginBtn.textContent = originalText;
       }
     });
-  </script>
 
+    // ===== PASSWORD EYE TOGGLE =====
+    const passwordInput = document.getElementById('password');
+    const togglePassword = document.getElementById('toggle-password');
+
+    togglePassword.addEventListener('click', () => {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      togglePassword.classList.toggle('fa-eye-slash');
+    });
+
+    // ===== MODAL LOGIC =====
+    const modalOverlay = document.getElementById("demo-modal");
+    const closeModalBtn = document.getElementById("close-modal");
+    const dontShowAgain = document.getElementById("dont-show-again");
+
+    window.addEventListener("load", () => {
+      if (!localStorage.getItem("hideDemoModal")) {
+        modalOverlay.classList.add("active");
+      }
+    });
+
+    function closeModal() {
+      if (dontShowAgain.checked) localStorage.setItem("hideDemoModal", "true");
+      modalOverlay.classList.remove("active");
+    }
+
+    closeModalBtn.addEventListener("click", closeModal);
+    modalOverlay.addEventListener("click", (e) => {
+      if (e.target === modalOverlay) closeModal();
+    });
+
+  </script>
 </body>
 </html>

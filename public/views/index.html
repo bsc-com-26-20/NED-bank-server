@@ -4,28 +4,40 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NED Bank Clone</title>
-
+    
+    <!-- Font Awesome for professional icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <!-- ✅ Correct path to CSS -->
     <link rel="stylesheet" href="../css/styles.css" />
+    
+    <style>
+      /* Additional styling for icons */
+      .nav-item i {
+        margin-right: 10px;
+        width: 20px;
+        text-align: center;
+      }
+    </style>
   </head>
 
   <body>
     <div class="container">
       <aside class="sidebar">
         <div class="sidebar-content">
-          <h2>NED Bank</h2>
+          <h2><i class="fas fa-university"></i> NED Bank</h2>
           <ul>
-            <li><a href="#" class="nav-item-active" data-name="home">🏠 Home</a></li>
-            <li><a href="#" class="nav-item" data-name="accounts">🏦 Accounts</a></li>
-            <li><a href="#" class="nav-item" data-name="customers">👥 Customers</a></li>
-            <li><a href="#" class="nav-item" data-name="payments">💸 Payments</a></li>
-            <li><a href="#" class="nav-item" data-name="history">📜 History</a></li>
-            <li><a href="#" class="nav-item" data-name="helper">❓ Helper</a></li>
+            <li><a href="#" class="nav-item-active" data-name="home"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="#" class="nav-item" data-name="accounts"><i class="fas fa-landmark"></i> Accounts</a></li>
+            <li><a href="#" class="nav-item" data-name="customers"><i class="fas fa-users"></i> Customers</a></li>
+            <li><a href="#" class="nav-item" data-name="payments"><i class="fas fa-money-bill-transfer"></i> Payments</a></li>
+            <li><a href="#" class="nav-item" data-name="history"><i class="fas fa-history"></i> History</a></li>
+            <li><a href="#" class="nav-item" data-name="helper"><i class="fas fa-question-circle"></i> Helper</a></li>
           </ul>
         </div>
         <nav class="sidebar-footer">
-          <a href="#" class="nav-item" data-name="settings">⚙️ Settings</a>
-          <a href="#" class="nav-item" id="logout-link" style="margin-top: 10px;">🚪 Logout</a>
+          <a href="#" class="nav-item" data-name="settings"><i class="fas fa-cog"></i> Settings</a>
+          <a href="#" class="nav-item" id="logout-link" style="margin-top: 10px;"><i class="fas fa-sign-out-alt"></i> Logout</a>
         </nav>
       </aside>
 

@@ -1,0 +1,85 @@
+.customer-details-page {
+    padding: 20px;
+    margin-left: 240px; /* sidebar offset */
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.customer-details-page h2 {
+    font-size: 28px;
+    margin-bottom: 15px;
+    color: #2c3e50;
+}
+
+.customer-info {
+    background: #f1f1f1;
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.customer-info h3 {
+    margin: 0 0 8px 0;
+    color: #34495e;
+}
+
+.customer-info p {
+    margin: 4px 0;
+    color: #555;
+}
+
+.accounts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.account-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.account-card:hover {
+    transform: translateY(-4px);
+}
+
+.account-card h4 {
+    margin: 0 0 10px;
+    color: #2c3e50;
+}
+
+.account-card p {
+    margin: 6px 0;
+    color: #555;
+}
+
+.account-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.account-actions input {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    width: 100%;
+}
+
+.account-actions button {
+    padding: 8px;
+    background: #8e44ad;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.account-actions button:hover {
+    background: #732d91;
+}

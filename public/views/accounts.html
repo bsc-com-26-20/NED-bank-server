@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Accounts - NedBank Dashboard</title>
+
+    <link rel="stylesheet" href="../css/accounts.css" />
+    <link rel="stylesheet" href="../css/sidebar.css" />
+</head>
+<body>
+
+    <!-- Sidebar (same as other pages) -->
+    <div id="sidebar-container"></div>
+
+    <!-- Main Content -->
+    <main class="accounts-page">
+        <h2>🏦 Customer Accounts</h2>
+
+        <!-- Search Bar -->
+        <div class="search-box">
+            <input type="text" id="search-input" placeholder="Search by customer or account ID...">
+        </div>
+
+        <!-- Accounts Container -->
+        <div class="accounts-container" id="accounts-container">
+            <p>Loading accounts...</p>
+        </div>
+    </main>
+
+    <!-- Sidebar Loader -->
+    <script src="../js/sidebar.js"></script>
+
+    <!-- API + Page Logic -->
+    <script type="module">
+        import { getCustomers } from "../js/api.js";
+
+        async function loadAccounts() {
+            const container = document.getElementById("accounts-container");
+            container.innerHTML = "<p>Loading accounts...</p>";
+
+            try {
+                const customers = await getCustomers();
+                container.innerHTML = "";
+
+                customers.forEach(customer => {
+                    if (!customer.accounts || customer.accounts.length === 0) return;
+
+                    customer.accounts.forEach(account => {
+                        const card = document.createElement("div");
+                        card.classList.add("account-card");
+
+                        card.innerHTML = `
+                            <h3>${customer.full_name}</h3>
+                            <p class="acc-id">Account ID: <strong>${account.account_id}</strong></p>
+                            <p class="balance">Balance: <span>MWK ${Number(account.balance).toLocaleString()}</span></p>
+                        `;
+
+                        container.appendChild(card);
+                    });
+                });
+
+            } catch (err) {
+                container.innerHTML = `<p style="color:red;">Failed to load accounts.</p>`;
+                console.error("Error loading accounts:", err);
+            }
+        }
+
+        // Search functionality
+        document.getElementById("search-input").addEventListener("input", function () {
+            const value = this.value.toLowerCase();
+            const cards = document.querySelectorAll(".account-card");
+
+            cards.forEach(card => {
+                card.style.display = card.innerText.toLowerCase().includes(value)
+                    ? "block"
+                    : "none";
+            });
+        });
+
+        loadAccounts();
+    </script>
+
+</body>
+</html>

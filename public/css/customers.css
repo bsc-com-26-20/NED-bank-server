@@ -1,0 +1,62 @@
+/* ============================
+   CUSTOMERS PAGE STYLES
+   ============================ */
+
+   .customers-page {
+    padding: 20px;
+}
+
+.search-box {
+    margin-bottom: 20px;
+}
+
+.search-box input {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1em;
+}
+
+.customers-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.customer-card {
+    background-color: #18283a;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #2a3441;
+    color: #fff;
+    transition: 0.3s;
+}
+
+.customer-card:hover {
+    background-color: #1f2c45;
+}
+
+.customer-card h3 {
+    margin: 0 0 10px 0;
+}
+
+.customer-card p {
+    margin: 5px 0;
+}
+
+.btn-view {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #5a8dee;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-view:hover {
+    background-color: #7b7ef3;
+}

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customers - NedBank Dashboard</title>
+    <link rel="stylesheet" href="../css/customers.css" />
+    <link rel="stylesheet" href="../css/sidebar.css" />
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div id="sidebar-container"></div>
+
+    <!-- Main Content -->
+    <main class="customers-page">
+        <h2>👥 Customers</h2>
+
+        <!-- Search Bar -->
+        <div class="search-box">
+            <input type="text" id="customer-search" placeholder="Search by name or customer ID..." />
+        </div>
+
+        <!-- Customer List -->
+        <div id="customers-container" class="customers-container">
+            <p>Loading customers...</p>
+        </div>
+    </main>
+    <!-- Page Logic -->
+    <script type="module">
+        import { getCustomers } from "/js/api.js";
+    
+        async function loadCustomers() {
+            const container = document.getElementById("customers-container");
+            container.innerHTML = "<p>Loading customers...</p>";
+    
+            try {
+                const customers = await getCustomers();
+                container.innerHTML = "";
+    
+                customers.forEach(customer => {
+                    const card = document.createElement("div");
+                    card.classList.add("customer-card");
+    
+                    // Use backend fields: id, first_name, last_name, email, phone
+                    card.innerHTML = `
+                        <h3>${customer.first_name} ${customer.last_name}</h3>
+                        <p class="customer-id">ID: <strong>${customer.id}</strong></p>
+                        <p>Email: ${customer.email || "—"}</p>
+                        <p>Phone: ${customer.phone || "—"}</p>
+    
+                        <button class="btn-view" onclick="window.location.href='customer-details.html?id=${customer.id}'">
+                            View Accounts
+                        </button>
+                    `;
+    
+                    container.appendChild(card);
+                });
+    
+            } catch (err) {
+                container.innerHTML = `<p style="color:red;">Failed to load customers.</p>`;
+                console.error("Error loading customers:", err);
+            }
+        }
+    
+        // Search filtering
+        document.getElementById("customer-search").addEventListener("input", function () {
+            const value = this.value.toLowerCase();
+            const cards = document.querySelectorAll(".customer-card");
+    
+            cards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                card.style.display = text.includes(value) ? "block" : "none";
+            });
+        });
+    
+        loadCustomers();
+    </script>
+    
+
+</body>
+</html>

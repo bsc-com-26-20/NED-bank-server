@@ -1,3 +1,4 @@
+//script.js
 // FUNCTION: drawChart
 function drawChart(canvasId, data) {
   // DOM Selection: getElementById() finds an element by its ID
@@ -136,6 +137,7 @@ function loadPage(page) {
         if (page === 'login') initLoginPage();
         if (page === 'payments') initPaymentsPage();
         if (page === 'history') initHistoryPage();
+        if (page == 'customers') initCustomersPage();
       }, 150);
     })
     .catch(err => {
@@ -205,7 +207,7 @@ function updateDashboardStats(stats) {
     </div>
     <div class="stat-card">
       <h4>Total Balance</h4>
-      <p class="stat-value">${(stats.total_balance || 0).toFixed(2)} BYN</p>
+      <p class="stat-value">${(stats.total_balance || 0).toFixed(2)} MWK</p>
     </div>
   `;
 }
@@ -220,7 +222,7 @@ function updateRecentTransactions(transactions) {
     const li = document.createElement('li');
     const amount = parseFloat(transaction.amount);
     const sign = amount >= 0 ? '+' : '';
-    const amountText = `${sign}${amount.toFixed(2)} BYN`;
+    const amountText = `${sign}${amount.toFixed(2)} MWK`;
     
     li.innerHTML = `
       ${transaction.first_name || 'Unknown'} ${transaction.last_name || ''} 
@@ -392,7 +394,7 @@ async function handleDeposit() {
     const result = await api.depositMoney(accountId, amount);
     
     if (successDiv) {
-      successDiv.textContent = `✅ Deposit successful! New balance: ${result.account.balance} BYN`;
+      successDiv.textContent = `✅ Deposit successful! New balance: ${result.account.balance} MWK`;
       successDiv.style.display = 'block';
       successDiv.className = 'success-message';
     }
@@ -441,7 +443,7 @@ async function handleWithdraw() {
     const result = await api.withdrawMoney(accountId, amount);
     
     if (successDiv) {
-      successDiv.textContent = `✅ Withdrawal successful! New balance: ${result.account.balance} BYN`;
+      successDiv.textContent = `✅ Withdrawal successful! New balance: ${result.account.balance} MWK`;
       successDiv.style.display = 'block';
       successDiv.className = 'success-message';
     }
@@ -610,5 +612,41 @@ async function loadTransactionHistory() {
     if (loadBtn) loadBtn.disabled = false;
     if (btnText) btnText.style.display = 'inline';
     if (btnLoader) btnLoader.style.display = 'none';
+  }
+}
+
+// RUN THIS WHEN CUSTOMERS PAGE LOADS
+export async function initCustomersPage() {
+  const container = document.getElementById("customers-container");
+  if (!container) return;
+
+  container.innerHTML = "<p>Loading customers...</p>";
+
+  try {
+    const { getCustomers } = await import("./api.js");
+    const customers = await getCustomers();
+
+    container.innerHTML = "";
+
+    customers.forEach(customer => {
+      const card = document.createElement("div");
+      card.classList.add("customer-card");
+
+      card.innerHTML = `
+        <h3>${customer.first_name} ${customer.last_name}</h3>
+        <p class="customer-id"><strong>ID:</strong> ${customer.id}</p>
+        <p><strong>Email:</strong> ${customer.email || "N/A"}</p>
+        <p><strong>Phone:</strong> ${customer.phone || "N/A"}</p>
+
+        <button class="btn-view" onclick="window.location.href='customer-details.html?id=${customer.id}'">
+          View Accounts
+        </button>
+      `;
+
+      container.appendChild(card);
+    });
+  } catch (error) {
+    console.error("Error loading customers:", error);
+    container.innerHTML = `<p style="color:red;">Failed to load customers. Check console.</p>`;
   }
 }
