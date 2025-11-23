@@ -1,9 +1,11 @@
 <section class="payments-page">
-    <h2>💸 Payments & Transactions</h2>
+    <h2>Payments & Transactions</h2>
     
     <div class="payment-actions">
+
+        <!-- DEPOSIT -->
         <div class="action-card">
-            <h3>💰 Deposit</h3>
+            <h3>Deposit</h3>
             <form id="deposit-form" class="payment-form">
                 <div class="form-group">
                     <label for="deposit-account">Account ID</label>
@@ -21,8 +23,9 @@
             </form>
         </div>
 
+        <!-- WITHDRAW -->
         <div class="action-card">
-            <h3>💸 Withdraw</h3>
+            <h3>Withdraw</h3>
             <form id="withdraw-form" class="payment-form">
                 <div class="form-group">
                     <label for="withdraw-account">Account ID</label>
@@ -40,8 +43,9 @@
             </form>
         </div>
 
+        <!-- TRANSFER -->
         <div class="action-card">
-            <h3>🔄 Transfer</h3>
+            <h3>Transfer</h3>
             <form id="transfer-form" class="payment-form">
                 <div class="form-group">
                     <label for="from-account">From Account ID</label>
@@ -66,3 +70,23 @@
 
     <div class="success-message" id="payment-success" style="display: none;"></div>
 </section>
+
+<!-- AUTO-FILL CUSTOMER ID SCRIPT
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const params = new URLSearchParams(window.location.search);
+    const customerId = params.get("customer");
+
+    if (!customerId) return;
+
+    // Autofill fields
+    document.getElementById("deposit-account").value = customerId;
+    document.getElementById("withdraw-account").value = customerId;
+    document.getElementById("from-account").value = customerId;
+
+    // Optional: lock fields so they cannot be edited
+    document.getElementById("deposit-account").readOnly = true;
+    document.getElementById("withdraw-account").readOnly = true;
+    document.getElementById("from-account").readOnly = true;
+});
+</script> -->

@@ -10,7 +10,7 @@ function generateTokens(user) {
   const accessToken = jwt.sign(
     { id: user.id, username: user.username, role: user.role },
     process.env.JWT_SECRET,
-    { expiresIn: "15m" }
+    { expiresIn: "60m" }
   );
 
   const refreshToken = jwt.sign(
@@ -22,7 +22,7 @@ function generateTokens(user) {
   return { accessToken, refreshToken };
 }
 
-// REGISTER (✅ returns tokens now)
+// REGISTER (returns tokens now)
 router.post("/register", async (req, res) => {
   const { username, password, full_name, role } = req.body;
 

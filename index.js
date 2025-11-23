@@ -10,17 +10,17 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// ✅ Serve all static files (CSS, JS, images)
+// Serve all static files (CSS, JS, images)
 app.use(express.static(path.join(__dirname, "public")));
 
-// ✅ Import routes
+// Import routes
 const authRoutes = require("./routes/auth");
 const authMiddleware = require("./middleware/authMiddleware");
 
-// ✅ Use routes
+// Use routes
 app.use("/auth", authRoutes);
 
-// ✅ Root route — serve main page
+// Root route — serve main page
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "views", "login.html"));
 });
@@ -29,7 +29,7 @@ app.get("/index.html", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "views", "index.html"));
 });
 
-// ✅ Optional: serve other pages directly
+//  serve other pages directly
 app.get("/login", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "views", "login.html"));
 });
@@ -54,11 +54,7 @@ app.get("/customers.html", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "views", "customers.html"));
 });
 
-app.get("/customer-details.html", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "views", "customer-details.html"));
-});
-
-// ✅ Database test route
+// Database test route
 app.get("/test-db", async (req, res) => {
   try {
     const result = await pool.query("SELECT NOW()");
@@ -70,7 +66,7 @@ app.get("/test-db", async (req, res) => {
   }
 });
 
-// // ✅ Protected Customers route
+// // Protected Customers route
 // app.get("/customers", authMiddleware, async (req, res) => {
 //   try {
 //     const result = await pool.query("SELECT * FROM customers");
@@ -81,7 +77,7 @@ app.get("/test-db", async (req, res) => {
 //   }
 // });
 
-// ✅ Other API routes
+//Other API routes
 const accountsRoutes = require("./routes/accounts");
 app.use("/accounts", accountsRoutes);
 
@@ -94,8 +90,8 @@ app.use("/stats", statsRoutes);
 const reportsRoutes = require("./routes/reports");
 app.use("/reports", reportsRoutes);
 
-// ✅ Start server
+// Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });

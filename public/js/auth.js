@@ -1,21 +1,15 @@
-// ============================================
 // AUTHENTICATION SERVICE
-// ============================================
-// Handles user authentication, login, logout, and token management
 
+// Handles user authentication, login, logout, and token management
 import { login, register, logout as apiLogout } from './api.js';
 
-// ============================================
 // CHECK AUTHENTICATION STATUS
-// ============================================
 export function isAuthenticated() {
   const token = localStorage.getItem('accessToken');
   return !!token; // Returns true if token exists
 }
 
-// ============================================
 // LOGIN FUNCTION
-// ============================================
 export async function handleLogin(username, password) {
   try {
     const response = await login(username, password);
@@ -58,7 +52,7 @@ export async function handleRegister(username, password, full_name, role = 'staf
 // ============================================
 export async function handleLogout() {
   try {
-    // 🧭 Confirm before logging out
+    // Confirm before logging out
     const confirmLogout = confirm("Are you sure you want to log out?");
     if (!confirmLogout) return;
 
@@ -68,13 +62,13 @@ export async function handleLogout() {
   } catch (error) {
     console.error("Logout error:", error);
   } finally {
-    // 🧹 Clear all stored data
+    // Clear all stored data
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("token");
     sessionStorage.clear();
 
-    // ✅ Redirect user to the login page
+    // Redirect user to the login page
     window.location.href = "/login";
   }
 }

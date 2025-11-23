@@ -28,10 +28,10 @@ router.get("/:customer_id", authMiddleware, async (req, res) => {
     try {
       const customerId = req.params.customer_id;
   
-      // 🔴 TODO: run SQL query to select all accounts for this customer
+      // TODO: run SQL query to select all accounts for this customer
       const result = await pool.query("SELECT * FROM accounts WHERE customer_id = $1", [ customerId]);
   
-      // 🔴 TODO: return the result as JSON
+      // TODO: return the result as JSON
       res.json(result.rows);
   
     } catch (err) {
@@ -218,7 +218,7 @@ router.get("/recent/all", authMiddleware, async (req, res) => {
       SELECT 
         t.id, 
         t.type, 
-        t.amount::float AS amount,  -- ✅ cast to float
+        t.amount::float AS amount,  --  cast to float
         t.created_at,
         a.account_number,
         c.first_name, 

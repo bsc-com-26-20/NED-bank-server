@@ -1,82 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Customers - NedBank Dashboard</title>
-    <link rel="stylesheet" href="../css/customers.css" />
-    <link rel="stylesheet" href="../css/sidebar.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customers - NedBank Dashboard</title>
+  <link rel="stylesheet" href="../css/customers.css" />
+  <style>
+    /* ---------- MODAL STYLES ---------- */
+    .modal.hidden { display: none; }
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+    .modal-content {
+      background: #1e293b;
+      width: 450px;
+      padding: 25px;
+      border-radius: 12px;
+      color: white;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+    .close-modal {
+      float: right;
+      cursor: pointer;
+      font-size: 22px;
+    }
+    .account-item {
+      padding: 12px;
+      background: #334155;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    .payments-btn {
+      width: 100%;
+      margin-top: 15px;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #5a8dee;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Sidebar -->
-    <div id="sidebar-container"></div>
+  <div id="sidebar-container"></div>
 
-    <!-- Main Content -->
-    <main class="customers-page">
-        <h2>👥 Customers</h2>
+  <main class="customers-page">
 
-        <!-- Search Bar -->
-        <div class="search-box">
-            <input type="text" id="customer-search" placeholder="Search by name or customer ID..." />
-        </div>
+    <!-- Top row with title and add button -->
+    <div class="top-row">
+      <h2>👥 Customers</h2>
+      <!-- <button class="add-customer-btn">+ Add Customer</button> -->
+    </div>
 
-        <!-- Customer List -->
-        <div id="customers-container" class="customers-container">
-            <p>Loading customers...</p>
-        </div>
-    </main>
-    <!-- Page Logic -->
-    <script type="module">
-        import { getCustomers } from "/js/api.js";
-    
-        async function loadCustomers() {
-            const container = document.getElementById("customers-container");
-            container.innerHTML = "<p>Loading customers...</p>";
-    
-            try {
-                const customers = await getCustomers();
-                container.innerHTML = "";
-    
-                customers.forEach(customer => {
-                    const card = document.createElement("div");
-                    card.classList.add("customer-card");
-    
-                    // Use backend fields: id, first_name, last_name, email, phone
-                    card.innerHTML = `
-                        <h3>${customer.first_name} ${customer.last_name}</h3>
-                        <p class="customer-id">ID: <strong>${customer.id}</strong></p>
-                        <p>Email: ${customer.email || "—"}</p>
-                        <p>Phone: ${customer.phone || "—"}</p>
-    
-                        <button class="btn-view" onclick="window.location.href='customer-details.html?id=${customer.id}'">
-                            View Accounts
-                        </button>
-                    `;
-    
-                    container.appendChild(card);
-                });
-    
-            } catch (err) {
-                container.innerHTML = `<p style="color:red;">Failed to load customers.</p>`;
-                console.error("Error loading customers:", err);
-            }
+    <!-- Search input
+    <div class="search-box">
+      <input type="text" id="customer-search" placeholder="Search by name or customer ID..." />
+    </div> -->
+
+    <!-- Container where customers will be loaded -->
+    <div id="customers-container" class="customers-container">
+      <p>Loading customers...</p>
+    </div>
+
+  </main>
+
+  <!-- ---------- MODAL FOR CUSTOMER ACCOUNTS ---------- -->
+  <div id="accounts-modal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close-modal" id="close-modal">✖</span>
+      <h3 id="modal-title">Accounts</h3>
+
+      <div id="accounts-list" class="accounts-list">
+        <p>Loading...</p>
+      </div>
+
+      <button id="payments-btn" class="payments-btn">Go to Payments</button>
+    </div>
+  </div>
+
+  <!-- ---------- JS ---------- -->
+  <script type="module">
+    import api from "/js/api.js";
+
+    const container = document.getElementById("customers-container");
+    const modal = document.getElementById("accounts-modal");
+    const accountsList = document.getElementById("accounts-list");
+    const paymentsBtn = document.getElementById("payments-btn");
+    const closeModalBtn = document.getElementById("close-modal");
+
+    // ---------- MODAL CONTROLS ----------
+    function openModal() { modal.classList.remove("hidden"); }
+    function closeModal() { modal.classList.add("hidden"); }
+    closeModalBtn.addEventListener("click", closeModal);
+    window.closeModal = closeModal;
+
+    // ---------- SHOW ACCOUNTS ----------
+    async function showAccounts(customerId, name) {
+      openModal();
+      document.getElementById("modal-title").innerText = `${name}'s Accounts`;
+      accountsList.innerHTML = "<p>Loading...</p>";
+
+      try {
+        const accounts = await api.getCustomerAccounts(customerId);
+
+        if (!accounts.length) {
+          accountsList.innerHTML = "<p>No accounts yet.</p>";
+          return;
         }
-    
-        // Search filtering
-        document.getElementById("customer-search").addEventListener("input", function () {
-            const value = this.value.toLowerCase();
-            const cards = document.querySelectorAll(".customer-card");
-    
-            cards.forEach(card => {
-                const text = card.innerText.toLowerCase();
-                card.style.display = text.includes(value) ? "block" : "none";
-            });
+
+        accountsList.innerHTML = accounts.map(acc => `
+          <div class="account-item">
+            <p><strong>${acc.account_number}</strong></p>
+            <p>ID: ${acc.id}</p>
+            <p>Type: ${acc.account_type}</p>
+            <p>Balance: MK${Number(acc.balance).toLocaleString()}</p>
+          </div>
+        `).join("");
+
+        paymentsBtn.onclick = () =>
+          window.location.href = `/views/payments.html?customer=${customerId}`;
+
+
+      } catch (err) {
+        accountsList.innerHTML = "<p>Error loading accounts.</p>";
+        console.error(err);
+      }
+    }
+    window.showAccounts = showAccounts;
+
+    // ---------- LOAD CUSTOMERS ----------
+    export async function initCustomersPage() {
+      if (!container) return;
+      container.innerHTML = "<p>Loading customers...</p>";
+
+      try {
+        const customers = await api.getCustomers();
+        container.innerHTML = "";
+
+        if (!customers.length) {
+          container.innerHTML = "<p>No customers found.</p>";
+          return;
+        }
+
+        customers.forEach(c => {
+          const card = document.createElement("div");
+          card.classList.add("customer-card");
+
+          card.innerHTML = `
+            <h3>${c.first_name} ${c.last_name}</h3>
+            <p>ID: <b>${c.id}</b></p>
+            <p>Email: ${c.email || "N/A"}</p>
+            <p>Phone: ${c.phone || "N/A"}</p>
+
+            <div class="card-actions">
+              <button class="btn-view">View Accounts</button>
+              <button class="btn-add-account">+ Add</button>
+            </div>
+          `;
+
+          // Attach click event AFTER element is created
+          const viewBtn = card.querySelector(".btn-view");
+          viewBtn.addEventListener("click", () => showAccounts(c.id, c.first_name));
+
+          container.appendChild(card);
         });
-    
-        loadCustomers();
-    </script>
-    
+
+      } catch (err) {
+        container.innerHTML = "<p>Error loading customers.</p>";
+        console.error(err);
+      }
+    }
+
+    // ---------- SEARCH FILTER ----------
+    document.getElementById("customer-search").addEventListener("input", function () {
+      const v = this.value.toLowerCase();
+      document.querySelectorAll(".customer-card").forEach(card => {
+        card.style.display = card.innerText.toLowerCase().includes(v) ? "block" : "none";
+      });
+    });
+
+    // ---------- INITIALIZE PAGE ----------
+    initCustomersPage();
+  </script>
 
 </body>
 </html>

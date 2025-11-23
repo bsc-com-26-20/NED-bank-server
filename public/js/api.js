@@ -1,13 +1,11 @@
-// ============================================
 // API SERVICE – Connecting Frontend to Backend
-// ============================================
 
 // Detect if we are running locally
 const isLocal =
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1";
 
-// ✅ Automatically use the correct backend URL
+// Automatically use the correct backend URL
 // When deployed, it will use the same Render domain your frontend is served from
 const API_BASE_URL = isLocal
   ? "http://localhost:5000"
@@ -60,34 +58,30 @@ async function apiRequest(endpoint, options = {}) {
     const data = await response.json().catch(() => ({}));
 
     if (!response.ok) {
-      console.error("❌ API Error Response:", data);
+      console.error(" API Error Response:", data);
       throw new Error(data.message || `Request failed: ${response.status}`);
     }
 
     return data;
   } catch (error) {
-    console.error("🚨 Network or API Error:", error.message);
+    console.error(" Network or API Error:", error.message);
     throw error;
   }
 }
 
-// ============================================
-// 🔍 TEST CONNECTION TO BACKEND
-// ============================================
+// TEST CONNECTION TO BACKEND
 export async function testBackendConnection() {
   try {
     const data = await apiRequest("/test-db");
-    console.log("✅ Backend connection successful:", data);
+    console.log("Backend connection successful:", data);
     return data;
   } catch (error) {
-    console.error("❌ Backend connection failed:", error);
+    console.error("Backend connection failed:", error);
     throw error;
   }
 }
 
-// ============================================
 // AUTHENTICATION API
-// ============================================
 export async function login(username, password) {
   return apiRequest("/auth/login", {
     method: "POST",
@@ -129,9 +123,7 @@ export async function refreshToken() {
   return data;
 }
 
-// ============================================
 // DASHBOARD, TRANSACTIONS, CUSTOMERS, REPORTS
-// ============================================
 export async function getDashboardStats() {
   return apiRequest("/stats");
 }
@@ -196,9 +188,7 @@ export async function downloadDailyReport() {
   window.URL.revokeObjectURL(url);
 }
 
-// ============================================
 // EXPORT DEFAULT
-// ============================================
 export default {
   testBackendConnection,
   login,

@@ -88,7 +88,7 @@ function loadPageStyles(page) {
   // Create new <link> element
   const link = document.createElement("link");
   link.rel = "stylesheet";
-  link.href = `../css/${page}.css`; // path to your page-specific CSS
+  link.href = `../css/${page}.css`;
   link.id = "page-style";
 
   document.head.appendChild(link);
@@ -107,7 +107,7 @@ function loadPage(page) {
       const mainContent = document.getElementById('main-content');
       mainContent.innerHTML = html;
 
-      // ✅ Load page-specific CSS dynamically
+      // Load page-specific CSS dynamically
       loadPageStyles(page);
 
       // Update active sidebar link
@@ -120,17 +120,41 @@ function loadPage(page) {
       }
 
       // Home page specific actions
+      const container = document.querySelector('.container');
+
       if (page === 'home') {
-        setTimeout(async () => {
-          moveRightPanelContent();
-          await loadDashboardData();
-          const costs = [12, 30, 22, 25, 18, 20, 12];
-          drawChart('costChart', costs);
-        }, 100);
+          setTimeout(async () => {
+              moveRightPanelContent();
+              await loadDashboardData();
+              const costs = [12, 30, 22, 25, 18, 20, 12];
+              drawChart('costChart', costs);
+          }, 100);
+
+          // Show right panel
+          const rightPanel = document.getElementById('right-panel');
+          if (rightPanel) {
+              rightPanel.style.display = 'block';
+              rightPanel.style.width = '250px';
+          }
+
+          // Adjust container spacing for Home
+          if (container) container.style.marginRight = '300px'; 
+
       } else {
-        const rightPanel = document.getElementById('right-panel');
-        if (rightPanel) rightPanel.innerHTML = '';
+          // Hide right panel
+          const rightPanel = document.getElementById('right-panel');
+          if (rightPanel) {
+              rightPanel.style.display = 'none';
+              rightPanel.innerHTML = '';
+              rightPanel.style.width = '0';
+          }
+
+          // Remove extra right margin
+          if (container) container.style.marginRight = '20px';
       }
+
+
+    
 
       // Initialize page-specific scripts
       setTimeout(() => {
@@ -501,7 +525,7 @@ async function handleTransfer() {
     const result = await api.transferMoney(fromAccountId, toAccountId, amount);
     
     if (successDiv) {
-      successDiv.textContent = `✅ Transfer successful! From: ${result.from_account.balance} BYN, To: ${result.to_account.balance} BYN`;
+      successDiv.textContent = `✅ Transfer successful! From: ${result.from_account.balance} MWK, To: ${result.to_account.balance} MWK`;
       successDiv.style.display = 'block';
       successDiv.className = 'success-message';
     }
@@ -595,7 +619,7 @@ async function loadTransactionHistory() {
                 ${tx.first_name ? `<span>${tx.first_name} ${tx.last_name || ''}</span>` : ''}
               </div>
               <div class="tx-amount" style="color: ${amount >= 0 ? '#4ade80' : '#ff6b6b'}">
-                ${sign}${amount.toFixed(2)} BYN
+                ${sign}${amount.toFixed(2)} MWK
               </div>
             </div>
           `;
@@ -615,38 +639,106 @@ async function loadTransactionHistory() {
   }
 }
 
+let modal, accountsList, paymentsBtn, closeModalBtn;
+
+function setupCustomerModal() {
+  modal = document.getElementById("accounts-modal");
+  accountsList = document.getElementById("accounts-list");
+  paymentsBtn = document.getElementById("payments-btn");
+  closeModalBtn = document.getElementById("close-modal");
+
+  if (!modal) return;
+
+  closeModalBtn.addEventListener("click", () => {
+    modal.classList.add("hidden");
+  });
+}
+
+function openModal() {
+  modal.classList.remove("hidden");
+}
+
+async function showAccounts(customerId, name) {
+  openModal();
+  document.getElementById("modal-title").innerText = `${name}'s Accounts`;
+  accountsList.innerHTML = "<p>Loading...</p>";
+
+  try {
+    const api = await import("./api.js");
+    const accounts = await api.getCustomerAccounts(customerId);
+
+    if (!accounts.length) {
+      accountsList.innerHTML = "<p>No accounts yet.</p>";
+      return;
+    }
+
+    accountsList.innerHTML = accounts
+      .map(
+        (acc) => `
+        <div class="account-item">
+          <p><strong>${acc.account_number}</strong></p>
+          <p>ID: ${acc.id}</p>
+          <p>Type: ${acc.account_type}</p>
+          <p>Balance: MK${Number(acc.balance).toLocaleString()}</p>
+        </div>
+      `
+      )
+      .join("");
+
+      paymentsBtn.onclick = () => {
+        document.getElementById("accounts-modal").style.display = "none";
+        window.navigateTo("payments");
+      };
+      
+  } catch (error) {
+    accountsList.innerHTML = "<p>Error loading accounts.</p>";
+    console.error(error);
+  }
+}
+
+
 // RUN THIS WHEN CUSTOMERS PAGE LOADS
-export async function initCustomersPage() {
+async function initCustomersPage() {
   const container = document.getElementById("customers-container");
   if (!container) return;
+
+  setupCustomerModal();
 
   container.innerHTML = "<p>Loading customers...</p>";
 
   try {
-    const { getCustomers } = await import("./api.js");
-    const customers = await getCustomers();
+    const api = await import("./api.js");
+    const customers = await api.getCustomers();
 
     container.innerHTML = "";
 
-    customers.forEach(customer => {
+    customers.forEach(c => {
       const card = document.createElement("div");
       card.classList.add("customer-card");
 
       card.innerHTML = `
-        <h3>${customer.first_name} ${customer.last_name}</h3>
-        <p class="customer-id"><strong>ID:</strong> ${customer.id}</p>
-        <p><strong>Email:</strong> ${customer.email || "N/A"}</p>
-        <p><strong>Phone:</strong> ${customer.phone || "N/A"}</p>
+        <h3>${c.first_name} ${c.last_name}</h3>
+        <p>ID: <b>${c.id}</b></p>
+        <p>Email: ${c.email || "N/A"}</p>
+        <p>Phone: ${c.phone || "N/A"}</p>
 
-        <button class="btn-view" onclick="window.location.href='customer-details.html?id=${customer.id}'">
-          View Accounts
-        </button>
+        <div class="card-actions">
+          <button class="btn-view">View Accounts</button>
+        </div>
       `;
+
+      card.querySelector(".btn-view")
+          .addEventListener("click", () => showAccounts(c.id, c.first_name));
 
       container.appendChild(card);
     });
-  } catch (error) {
-    console.error("Error loading customers:", error);
-    container.innerHTML = `<p style="color:red;">Failed to load customers. Check console.</p>`;
+  } catch (err) {
+    container.innerHTML = "<p>Error loading customers.</p>";
+    console.error(err);
   }
 }
+
+
+window.navigateTo = function(page) {
+  loadPage(page);
+};
